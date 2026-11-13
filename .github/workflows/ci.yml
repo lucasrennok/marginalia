@@ -18,5 +18,31 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y valgrind
+
+      - name: Install Semgrep
+        run: pipx install semgrep==1.182.1
+
       - name: Build the software and the unit tests
         run: make
+
+      - name: Testes
+        run: |
+          build/tests --list
+          build/tests
+
+      - name: Run sanitizers
+        run: make sanitizers
+
+      - name: Run Valgrind
+        run: make valgrind
+
+      - name: Run SAST
+        run: make sast
+
+      - name: Run DAST
+        run: make dast
