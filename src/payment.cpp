@@ -1,11 +1,10 @@
 # include "payment.h"
 
 # include <cstdio>
+# include <cstdlib>
 # include <cstring>
 
 # define KEY_SIZE 128
-
-static const char PAYMENT_KEY[] = "sk_live_ImVvrDfWpMmdcJeKLS5ycAGapjUD1zwP";
 
 /* Simula o gateway de pagamentos, que aceita o pagamento quando a chave foi informada e o valor é positivo. */
 static bool gatewayAuthorize(const char *key, double amount)
@@ -19,8 +18,17 @@ bool processPayment(double amount)
     char key[KEY_SIZE];
     bool authorized;
 
-    snprintf(key, sizeof key, "%s", PAYMENT_KEY);
+
+    /* CWE-798, alerta nas actions, chave fixa no código, retirado a chave e puxado do environments que não é commitado com o código no git */
+    const char *env = getenv("PAYMENT_KEY");
+    if (env == NULL)
+    {
+        return false;
+    }
+
+    snprintf(key, sizeof key, "%s", env);
     authorized = gatewayAuthorize(key, amount);
-    memset(key, 0, sizeof key);
+    /* CWE-14, memset removível pelo compilador, pode ficar na memória então é bom zerar todos os valores desse buffer de chave, então não usaria o memset */
+    explicit_bzero(key, sizeof key);
     return authorized;
 }
