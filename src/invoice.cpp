@@ -24,8 +24,9 @@ Customer Invoice::getCustomer() const
 /* Acrescenta um livro ao pedido e devolve false se ele já estiver no pedido, se a quantidade não for positiva ou se o pedido estiver cheio. */
 bool Invoice::addBook(const Book &book, int quantity)
 {
+    /* CWE-787 - ASan, escrita fora dos limites, precisa colocar o operador condicional >= para ficar correto */
     /* CWE-20 - DAST, validação de entrada, requisito número 4, alterado o operador para <= para ficar dentro da validação de entrada */
-    if (nBooks > MAX_BOOKS || quantity <= 0)
+    if (nBooks >= MAX_BOOKS || quantity <= 0)
     {
         return false;
     }
@@ -51,7 +52,8 @@ bool Invoice::removeBook(const Book &book)
     {
         if (books[position].equals(book))
         {
-            for (int i = position; i < nBooks; i++)
+            /* CWE-125 - VALGRIND, leitura fora dos limites, precisa alterar a condição de saída do for para ficar no limite correto, por isso -1 */
+            for (int i = position; i < nBooks - 1; i++)
             {
                 books[i] = books[i + 1];
                 quantities[i] = quantities[i + 1];
