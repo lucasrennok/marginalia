@@ -24,7 +24,8 @@ Customer Invoice::getCustomer() const
 /* Acrescenta um livro ao pedido e devolve false se ele já estiver no pedido, se a quantidade não for positiva ou se o pedido estiver cheio. */
 bool Invoice::addBook(const Book &book, int quantity)
 {
-    if (nBooks > MAX_BOOKS || quantity < 0)
+    /* CWE-787, escrita fora dos limites, precisa colocar o operador condicional >= para ficar correto */
+    if (nBooks >= MAX_BOOKS || quantity < 0)
     {
         return false;
     }
