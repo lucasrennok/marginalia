@@ -25,7 +25,8 @@ Customer Invoice::getCustomer() const
 bool Invoice::addBook(const Book &book, int quantity)
 {
     /* CWE-787 - ASan, escrita fora dos limites, precisa colocar o operador condicional >= para ficar correto */
-    if (nBooks >= MAX_BOOKS || quantity < 0)
+    /* CWE-20 - DAST, validação de entrada, requisito número 4, alterado o operador para <= para ficar dentro da validação de entrada */
+    if (nBooks >= MAX_BOOKS || quantity <= 0)
     {
         return false;
     }
