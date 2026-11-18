@@ -51,7 +51,8 @@ bool Invoice::removeBook(const Book &book)
     {
         if (books[position].equals(book))
         {
-            for (int i = position; i < nBooks; i++)
+            /* CWE-125, leitura fora dos limites, precisa alterar a condição de saída do for para ficar no limite correto, por isso -1 */
+            for (int i = position; i < nBooks - 1; i++)
             {
                 books[i] = books[i + 1];
                 quantities[i] = quantities[i + 1];
