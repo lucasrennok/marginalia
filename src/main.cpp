@@ -89,7 +89,8 @@ static std::string commandCustomer(Store &store, std::istringstream &in)
     int id = 0;
     int discount = 0;
 
-    if (!readInt(in, id) || !readInt(in, discount))
+    /* CWE-20, validação de entrada, diferente do requisito 3, feito a validação do período de desconto */
+    if (!readInt(in, id) || !readInt(in, discount) || discount < 0 || discount > 100)
     {
         return "Error: use customer <id> <discount> <name>";
     }
