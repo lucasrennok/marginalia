@@ -12,6 +12,8 @@
 # include "Invoice.h"
 # include "payment.h"
 
+/* Teste de pipeline recusado e do merge 
+1- se não passar dos testes, sast e dast então não tem como dar merge */
 /* Guarda o estado da sessão: os autores e os livros cadastrados e o pedido do cliente atual. */
 struct Store
 {
