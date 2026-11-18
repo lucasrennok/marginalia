@@ -20,7 +20,8 @@ Book::Book(int id, const char *name, const Author &author) : Book(id, name, auth
 Book::Book(int id, const char *name, const Author &author, double price)
 {
     this->id = id;
-    strcpy(this->name, name);
+    /* CWE-120, estouro de buffer, pode gerar buffer overflow com a função strcpy */
+    snprintf(this->name, sizeof this->name, "%s", name);
     this->author = author;
     this->price = price;
 }
